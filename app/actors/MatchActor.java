@@ -39,20 +39,6 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
         }else {
             lobby.joinLobby(out);
         }
-
-
-
-
-
-
-
-//        Message temp = new Message(Message.TYPE_START, "PlayFramwork");
-//        Gson gson = new Gson();
-//        this.out.tell(gson.toJson(temp), self());
-    }
-
-    public static Props props(ActorRef out, PlayerLobby lobby) {
-        return Props.create(MatchActor.class, out, lobby);
     }
 
     @Override
@@ -61,17 +47,24 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             .match(String.class, message -> {
                 Message msg = gson.fromJson(message, Message.class);
 
+                if (msg.touched) {
+                    out.tell(message, self());
+                    return;
+                }
+
                 if (msg.getType().equals(Message.TYPE_ACTOR_PATH)) {
                     parseOpponent(msg.getPayload());
                     return;
                 }
 
+                msg.touched = true;
+
                 if (opponent == null) {
-                    queuedMessages.add(message);
+                    queuedMessages.add(gson.toJson(msg));
                     return;
                 }
 
-                opponent.tell(message, self());
+                opponent.tell(gson.toJson(msg), self());
             })
 //            .match(ActorRef.class, ref -> {
 //                System.out.println(" ----> " + self().path() + " vs " + ref.path());
@@ -91,5 +84,9 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
                 opponent.tell(message, self());
             }
         });
+    }
+
+    public static Props props(ActorRef out, PlayerLobby lobby) {
+        return Props.create(MatchActor.class, out, lobby);
     }
 }
