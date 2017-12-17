@@ -26,7 +26,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
         if (lobby.hasWaitingPlayers()) {
             opponent = lobby.getOpponent();
-            opponent.tell(out, self());
+//            opponent.tell(out, self());
 
             while (!queuedMessages.isEmpty()) {
                 String message = queuedMessages.poll();
