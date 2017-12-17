@@ -36,6 +36,9 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             // send path to opponent
             Message msg = new Message(Message.TYPE_ACTOR_PATH, self().path().toString());
             opponent.tell(gson.toJson(msg), self());
+
+            Message msg2 = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
+            opponent.tell(gson.toJson(msg2), self());
         }else {
             lobby.joinLobby(out);
         }
@@ -75,6 +78,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
     private void parseOpponent(String path) {
         ActorSelection selection = getContext().actorSelection(path);
+        System.out.println(" -----> Trying to resolve");
 
         selection.resolveOneCS(new FiniteDuration(2, TimeUnit.SECONDS)).thenAccept(ref -> {
             opponent = ref;
