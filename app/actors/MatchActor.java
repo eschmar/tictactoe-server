@@ -26,13 +26,13 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
         if (lobby.hasWaitingPlayers()) {
             opponent = lobby.getOpponent();
-            opponent.tell(this.getSelf(), self());
+            opponent.tell(out, self());
 
             while (!queuedMessages.isEmpty()) {
-                out.tell(queuedMessages.poll(), self());
+                opponent.tell(queuedMessages.poll(), self());
             }
         }else {
-            lobby.joinLobby(self());
+            lobby.joinLobby(out);
         }
 
 //        Message temp = new Message(Message.TYPE_START, "PlayFramwork");
@@ -55,7 +55,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
                     return;
                 }
 
-                out.tell(message, self());
+                opponent.tell(message, self());
             })
             .match(ActorRef.class, ref -> {
                 opponent = ref;

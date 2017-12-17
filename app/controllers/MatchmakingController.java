@@ -26,10 +26,7 @@ public class MatchmakingController extends Controller {
 
     public WebSocket connect() {
         return WebSocket.Text.accept(request -> {
-//            Props.create(MatchActor.class, lobby)
-//            ActorRef imageActorRef = system.actorOf(Props.create(ResizePhotoActor.class, 1, 2, ""))
             return ActorFlow.actorRef(out -> Props.create(MatchActor.class, out, lobby), actorSystem, materializer);
-//            return ActorFlow.actorRef(MatchActor::props, actorSystem, materializer);
         });
     }
 }
