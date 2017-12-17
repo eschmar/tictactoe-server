@@ -20,6 +20,10 @@ public class MatchActor extends AbstractActor {
         gson = new Gson();
         queuedMessages = new LinkedList<>();
 
+
+        System.out.println(" > PEW PATH: " + out.path());
+        System.out.println(" > PEW2 PATH: " + self().path());
+
         if (lobby.hasWaitingPlayers()) {
             opponent = lobby.getOpponent();
             opponent.tell(this.getSelf(), out);
