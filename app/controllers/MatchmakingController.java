@@ -3,12 +3,12 @@ package controllers;
 import actors.MatchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
+import akka.stream.javadsl.Flow;
 import com.google.inject.Inject;
 import play.libs.streams.ActorFlow;
 import play.mvc.*;
 
 public class MatchmakingController extends Controller {
-
     private final ActorSystem actorSystem;
     private final Materializer materializer;
     private MatchActor temp;
@@ -20,10 +20,8 @@ public class MatchmakingController extends Controller {
     }
 
     public WebSocket connect() {
-        return WebSocket.Text.accept(request ->
-                ActorFlow.actorRef(MatchActor::props,
-                        actorSystem, materializer
-                )
-        );
+        return WebSocket.Text.accept(request -> {
+            return ActorFlow.actorRef(MatchActor::props, actorSystem, materializer);
+        });
     }
 }
