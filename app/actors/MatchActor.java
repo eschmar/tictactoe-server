@@ -29,7 +29,8 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             opponent.tell(out, self());
 
             while (!queuedMessages.isEmpty()) {
-                opponent.tell(queuedMessages.poll(), self());
+                String message = queuedMessages.poll();
+                opponent.tell(message, self());
             }
         }else {
             lobby.joinLobby(out);
@@ -48,7 +49,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
     public Receive createReceive() {
         return receiveBuilder()
             .match(String.class, message -> {
-                Message msg = gson.fromJson(message, Message.class);
+//                Message msg = gson.fromJson(message, Message.class);
 
                 if (opponent == null) {
                     queuedMessages.add(message);
@@ -58,6 +59,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
                 opponent.tell(message, self());
             })
             .match(ActorRef.class, ref -> {
+                System.out.println(" ----> " + self().path() + " vs " + ref.path());
                 opponent = ref;
             })
             .build();
