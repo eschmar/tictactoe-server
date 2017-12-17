@@ -31,6 +31,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
         if (lobby.hasWaitingPlayers()) {
             opponent = lobby.getOpponent();
+            System.out.println(" > DEBUGd: opponent path = " + opponent.path());
 
             // send path to opponent
             Message msg = new Message(Message.TYPE_ACTOR_PATH, self().path().toString());
@@ -72,10 +73,10 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
                 opponent.tell(message, self());
             })
-            .match(ActorRef.class, ref -> {
-                System.out.println(" ----> " + self().path() + " vs " + ref.path());
-                opponent = ref;
-            })
+//            .match(ActorRef.class, ref -> {
+//                System.out.println(" ----> " + self().path() + " vs " + ref.path());
+//                opponent = ref;
+//            })
             .build();
     }
 
@@ -84,6 +85,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
         selection.resolveOneCS(new FiniteDuration(2, TimeUnit.SECONDS)).thenAccept(ref -> {
             opponent = ref;
+            System.out.println(" > DEBUGd: resolvdOP = " + opponent.path());
             while (!queuedMessages.isEmpty()) {
                 String message = queuedMessages.poll();
                 opponent.tell(message, self());
