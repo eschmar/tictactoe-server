@@ -35,12 +35,12 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
             // send path to opponent
             Message msg = new Message(Message.TYPE_ACTOR_PATH, self().path().toString());
-            msg.touched = true;
             opponent.tell(gson.toJson(msg), self());
 
             Message msg2 = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
-            msg2.touched = true;
             opponent.tell(gson.toJson(msg2), self());
+            sendQueued();
+
         }else {
             lobby.joinLobby(out);
         }
@@ -51,14 +51,13 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
         return receiveBuilder()
             .match(String.class, message -> {
                 Message msg = gson.fromJson(message, Message.class);
-
-                if (msg.touched) {
-                    out.tell(message, self());
+                if (msg.getType().equals(Message.TYPE_ACTOR_PATH)) {
+                    parseOpponent(msg.getPayload());
                     return;
                 }
 
-                if (msg.getType().equals(Message.TYPE_ACTOR_PATH)) {
-                    parseOpponent(msg.getPayload());
+                if (msg.touched) {
+                    out.tell(message, self());
                     return;
                 }
 
@@ -85,11 +84,15 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
         selection.resolveOneCS(new FiniteDuration(2, TimeUnit.SECONDS)).thenAccept(ref -> {
             opponent = ref;
             System.out.println(" > DEBUGd: resolvdOP = " + opponent.path());
-            while (!queuedMessages.isEmpty()) {
-                String message = queuedMessages.poll();
-                opponent.tell(message, self());
-            }
+            sendQueued();
         });
+    }
+
+    private void sendQueued() {
+        while (!queuedMessages.isEmpty()) {
+            String message = queuedMessages.poll();
+            opponent.tell(message, self());
+        }
     }
 
     public static Props props(ActorRef out, PlayerLobby lobby) {
