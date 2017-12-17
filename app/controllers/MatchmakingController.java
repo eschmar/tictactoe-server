@@ -1,6 +1,6 @@
 package controllers;
 
-import actor.MatchActor;
+import actors.MatchActor;
 import akka.actor.ActorSystem;
 import akka.stream.Materializer;
 import com.google.inject.Inject;
@@ -11,6 +11,7 @@ public class MatchmakingController extends Controller {
 
     private final ActorSystem actorSystem;
     private final Materializer materializer;
+    private MatchActor temp;
 
     @Inject
     public MatchmakingController(ActorSystem actorSystem, Materializer materializer) {
