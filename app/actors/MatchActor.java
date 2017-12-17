@@ -33,7 +33,7 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             opponent = lobby.getOpponent();
 
             // send path to opponent
-            Message msg = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
+            Message msg = new Message(Message.TYPE_ACTOR_PATH, self().path().toString());
             opponent.tell(gson.toJson(msg), self());
         }else {
             lobby.joinLobby(out);
