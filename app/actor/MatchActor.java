@@ -12,6 +12,7 @@ public class MatchActor extends AbstractActor {
     public MatchActor(ActorRef out) {
         this.out = out;
         this.out.tell("Andele", self());
+        System.out.println("PEW PEW PEW");
     }
 
     @Override
