@@ -52,19 +52,12 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
                     return;
                 }
 
-                if (msg.touched) {
-                    out.tell(message, self());
-                    return;
-                }
-
-                msg.touched = true;
-
                 if (opponent == null) {
-                    queuedMessages.add(gson.toJson(msg));
+                    queuedMessages.add(message);
                     return;
                 }
 
-                opponent.tell(gson.toJson(msg), self());
+                opponent.tell(message, self());
             })
             .build();
     }
