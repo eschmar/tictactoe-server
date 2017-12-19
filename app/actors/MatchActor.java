@@ -89,8 +89,10 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
     }
 
     private void sendQueued() {
+        System.out.println(" -----> Sending queued messages");
         while (!queuedMessages.isEmpty()) {
             String message = queuedMessages.poll();
+            System.out.println(" -----> Sending queued: " + message);
             opponent.tell(message, self());
         }
     }
