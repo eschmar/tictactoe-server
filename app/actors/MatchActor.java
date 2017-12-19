@@ -25,14 +25,10 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
         gson = new Gson();
         queuedMessages = new LinkedList<>();
 
-        System.out.println(" > DEBUGd: out path = " + out.path());
-        System.out.println(" > DEBUGd: self path = " + self().path());
-
         if (lobby.hasWaitingPlayers()) {
             opponent = lobby.getOpponent();
-            System.out.println(" > DEBUGd: opponent path = " + opponent.path());
 
-            // send path to opponent
+            // inform opponent about myself
             Message msg = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
             opponent.tell(gson.toJson(msg), self());
 
@@ -62,22 +58,24 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             .build();
     }
 
+    /**
+     * Resolve string path to actor flow.
+     * @param path
+     */
     private void parseOpponent(String path) {
         ActorSelection selection = getContext().actorSelection(path);
-        System.out.println(" -----> Trying to resolve");
-
         selection.resolveOneCS(new FiniteDuration(2, TimeUnit.SECONDS)).thenAccept(ref -> {
             opponent = ref;
-            System.out.println(" > DEBUGd: resolvdOP = " + opponent.path());
             sendQueued();
         });
     }
 
+    /**
+     * Send messages that were queued, when there was no opponent available.
+     */
     private void sendQueued() {
-        System.out.println(" -----> Sending queued messages");
-        while (!queuedMessages.isEmpty()) {
+        while (!queuedMessages.isEmpty() && this.opponent != null) {
             String message = queuedMessages.poll();
-            System.out.println(" -----> Sending queued: " + message);
             opponent.tell(message, self());
         }
     }
