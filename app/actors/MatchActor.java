@@ -5,7 +5,6 @@ import akka.util.Timeout;
 import com.google.gson.Gson;
 import models.Message;
 import play.libs.akka.InjectedActorSupport;
-import scala.concurrent.Await;
 import scala.concurrent.duration.FiniteDuration;
 import services.PlayerLobby;
 import java.util.LinkedList;
@@ -34,13 +33,10 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             System.out.println(" > DEBUGd: opponent path = " + opponent.path());
 
             // send path to opponent
-            Message msg = new Message(Message.TYPE_ACTOR_PATH, self().path().toString());
+            Message msg = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
             opponent.tell(gson.toJson(msg), self());
 
-//            Message msg2 = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
-//            opponent.tell(gson.toJson(msg2), self());
             sendQueued();
-
         }else {
             lobby.joinLobby(out);
         }
@@ -70,10 +66,6 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
 
                 opponent.tell(gson.toJson(msg), self());
             })
-//            .match(ActorRef.class, ref -> {
-//                System.out.println(" ----> " + self().path() + " vs " + ref.path());
-//                opponent = ref;
-//            })
             .build();
     }
 
