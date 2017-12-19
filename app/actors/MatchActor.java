@@ -37,8 +37,8 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             Message msg = new Message(Message.TYPE_ACTOR_PATH, self().path().toString());
             opponent.tell(gson.toJson(msg), self());
 
-            Message msg2 = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
-            opponent.tell(gson.toJson(msg2), self());
+//            Message msg2 = new Message(Message.TYPE_ACTOR_PATH, out.path().toString());
+//            opponent.tell(gson.toJson(msg2), self());
             sendQueued();
 
         }else {
