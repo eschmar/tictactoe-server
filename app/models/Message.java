@@ -8,7 +8,6 @@ public class Message {
 
     private String type;
     private String payload;
-    public boolean touched = false;
 
     public Message(String type) {
         if (!type.equals(TYPE_MOVE) && !type.equals(TYPE_START) && !type.equals(TYPE_QUIT) && !type.equals(TYPE_ACTOR_PATH)) {

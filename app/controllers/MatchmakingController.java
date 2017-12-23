@@ -1,11 +1,9 @@
 package controllers;
 
 import actors.MatchActor;
-import akka.actor.Actor;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.stream.Materializer;
-import akka.stream.javadsl.Flow;
 import com.google.inject.Inject;
 import play.libs.streams.ActorFlow;
 import play.mvc.*;
