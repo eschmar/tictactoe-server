@@ -1,5 +1,9 @@
-@()
+@(lobby: services.PlayerLobby)
 
 @main("Welcome to Play") {
   <h1>Hello my friend, stay a while and listen...</h1>
+
+  @if(lobby.hasWaitingPlayers) {
+      <h2>Waiting players: @lobby.getWaitingPlayersCount</h2>
+  }
 }

@@ -24,4 +24,8 @@ public class PlayerLobby {
     public ActorRef getOpponent() {
         return this.waitingPlayers.poll();
     }
+
+    public int getWaitingPlayersCount() {
+        return this.waitingPlayers.size();
+    }
 }

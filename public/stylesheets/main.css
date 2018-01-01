@@ -2,8 +2,13 @@ body {
     margin: 0;
 }
 
-h1 {
+h1, h2 {
     margin: 12px;
     font-family: "Lato", Arial, sans-serif;
     color: #333333;
+}
+
+h2 {
+    font-size: 1em;
+    color: #666666;
 }
