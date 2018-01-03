@@ -57,7 +57,12 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             .build();
     }
 
-    public void postStop() throws Exception {
+    public void postStop() {
+        System.out.println("----------------> postSTOP ------");
+        if (opponent == null) {
+            return;
+        }
+
         opponent.tell(PoisonPill.getInstance(), self());
     }
 
