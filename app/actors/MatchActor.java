@@ -1,7 +1,6 @@
 package actors;
 
 import akka.actor.*;
-import akka.util.Timeout;
 import com.google.gson.Gson;
 import models.Message;
 import play.libs.akka.InjectedActorSupport;
@@ -13,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 public class MatchActor extends AbstractActor implements InjectedActorSupport {
     private Gson gson;
     private PlayerLobby lobby;
-    private LinkedList<String> queuedMessages;
-    private final Timeout timeout = new Timeout(2, TimeUnit.SECONDS);
+
     private final ActorRef out;
     private ActorRef opponent;
+    private LinkedList<String> queuedMessages;
 
     public MatchActor(ActorRef out, PlayerLobby lobby) {
         this.out = out;
@@ -56,6 +55,10 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
                 opponent.tell(message, self());
             })
             .build();
+    }
+
+    public void postStop() throws Exception {
+        opponent.tell(PoisonPill.getInstance(), self());
     }
 
     /**
