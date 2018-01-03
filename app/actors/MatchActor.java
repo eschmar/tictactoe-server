@@ -58,11 +58,9 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
     }
 
     public void postStop() {
-        System.out.println("----------------> postSTOP ------");
-        if (opponent == null) {
-            return;
-        }
+        if (opponent == null) return;
 
+        // make sure opponent's websocket gets closed as well
         opponent.tell(PoisonPill.getInstance(), self());
     }
 
