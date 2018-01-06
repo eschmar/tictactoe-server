@@ -11,11 +11,11 @@ public class Message {
     private String payload;
 
     public Message(String type) {
+        this.type = type;
+
         if (!isValidType()) {
             throw new IllegalArgumentException("Illegal message detected.");
         }
-
-        this.type = type;
     }
 
     public Message(String type, String payload) {
