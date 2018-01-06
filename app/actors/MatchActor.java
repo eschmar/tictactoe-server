@@ -42,12 +42,14 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
         return receiveBuilder()
             .match(String.class, message -> {
                 Message msg = gson.fromJson(message, Message.class);
+
                 if (msg.getType().equals(Message.TYPE_ACTOR_PATH)) {
                     parseOpponent(msg.getPayload());
                     return;
-                }
-
-                if (opponent == null) {
+                } else if (!msg.isValidGameType()) {
+                    abortGame();
+                    return;
+                } else if (opponent == null) {
                     queuedMessages.add(message);
                     return;
                 }
@@ -57,10 +59,26 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             .build();
     }
 
+    @Override
+    public void unhandled(Object message) {
+        super.unhandled(message);
+        abortGame();
+    }
+
+    /**
+     * Inform both players about illegal messages.
+     */
+    protected void abortGame() {
+        Message msg = new Message(Message.TYPE_SERVER_ABORT);
+        opponent.tell(gson.toJson(msg), self());
+        out.tell(gson.toJson(msg), self());
+    }
+
+    /**
+     * Make sure opponent's websocket gets closed as well.
+     */
     public void postStop() {
         if (opponent == null) return;
-
-        // make sure opponent's websocket gets closed as well
         opponent.tell(PoisonPill.getInstance(), self());
     }
 
@@ -84,9 +102,5 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
             String message = queuedMessages.poll();
             opponent.tell(message, self());
         }
-    }
-
-    public static Props props(ActorRef out, PlayerLobby lobby) {
-        return Props.create(MatchActor.class, out, lobby);
     }
 }
