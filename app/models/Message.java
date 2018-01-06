@@ -33,19 +33,19 @@ public class Message {
 
     public boolean isValidType() {
         return (
-            !type.equals(TYPE_MOVE) &&
-            !type.equals(TYPE_START) &&
-            !type.equals(TYPE_QUIT) &&
-            !type.equals(TYPE_ACTOR_PATH) &&
-            !type.equals(TYPE_SERVER_ABORT)
+            type.equals(TYPE_MOVE) ||
+            type.equals(TYPE_START) ||
+            type.equals(TYPE_QUIT) ||
+            type.equals(TYPE_ACTOR_PATH) ||
+            type.equals(TYPE_SERVER_ABORT)
         );
     }
 
     public boolean isValidGameType() {
         return (
-            !type.equals(TYPE_MOVE) &&
-            !type.equals(TYPE_START) &&
-            !type.equals(TYPE_QUIT)
+            type.equals(TYPE_MOVE) ||
+            type.equals(TYPE_START) ||
+            type.equals(TYPE_QUIT)
         );
     }
 }
