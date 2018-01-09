@@ -28,4 +28,8 @@ public class PlayerLobby {
     public int getWaitingPlayersCount() {
         return this.waitingPlayers.size();
     }
+
+    public void withdrawFromLobby(ActorRef out) {
+        this.waitingPlayers.remove(out);
+    }
 }

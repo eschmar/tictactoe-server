@@ -46,6 +46,9 @@ public class MatchActor extends AbstractActor implements InjectedActorSupport {
                 if (msg.getType().equals(Message.TYPE_ACTOR_PATH)) {
                     parseOpponent(msg.getPayload());
                     return;
+                } else if (msg.getType().equals(Message.TYPE_WITHDRAW)) {
+                    lobby.withdrawFromLobby(out);
+                    return;
                 } else if (!msg.isValidGameType()) {
                     abortGame();
                     return;

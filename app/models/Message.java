@@ -6,11 +6,12 @@ public class Message {
     public static final String TYPE_QUIT = "quit";
     public static final String TYPE_ACTOR_PATH = "path";
     public static final String TYPE_SERVER_ABORT = "abort";
+    public static final String TYPE_WITHDRAW = "withdraw";
 
     private String type;
     private String payload;
 
-    public Message(String type) {
+    public Message(String type) throws IllegalArgumentException {
         this.type = type;
 
         if (!isValidType()) {
@@ -36,6 +37,7 @@ public class Message {
             type.equals(TYPE_MOVE) ||
             type.equals(TYPE_START) ||
             type.equals(TYPE_QUIT) ||
+            type.equals(TYPE_WITHDRAW) ||
             type.equals(TYPE_ACTOR_PATH) ||
             type.equals(TYPE_SERVER_ABORT)
         );
